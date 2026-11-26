@@ -315,7 +315,7 @@ footer .lg img{height:54px}
           <div class="fl"><label>القسم <span class="req">*</span></label><select name="dept" id="dept"></select></div>
           <div class="fl"><label>صفة القيد</label><select name="status"><option value="out">من الخارج</option><option value="moeid">معيد / معيدة بالقسم</option><option value="mm">مدرس مساعد بالقسم</option></select></div>
           <div class="fl"><label>رئيس القسم</label><input type="text" name="head" id="head" placeholder="أ.د/ ..."><div class="hint">بيتكتب لوحده لبعض الأقسام، وتقدر تعدّله.</div></div>
-          <div class="fl"><label>مختص القسم بالدراسات العليا <small style="font-weight:500;color:var(--muted)">(اختياري)</small></label><input type="text" name="clerk" id="clerk" placeholder="أ/ ..."></div>
+          <div class="fl"><label>مختص القسم بالدراسات العليا</label><input type="text" name="clerk" id="clerk" placeholder="بيظهر لوحده حسب القسم" readonly tabindex="-1" style="background:var(--bg2);cursor:default"><div class="hint">بيتغيّر لوحده مع القسم.</div></div>
         </div>
       </fieldset>
       <fieldset><legend>بيانات الباحث</legend>
@@ -404,9 +404,9 @@ const LEADERS = {
 
 const DEPTS = [
   { id: 'mgmt',  name: 'الإدارة الرياضية والترويح',          short: 'الإدارة الرياضية',          head: 'أ.د/ محمد عبد المحسن أحمد', clerk: 'أ/ أحمد حسين محمد' },
-  { id: 'curr',  name: 'المناهج وطرق تدريس التربية الرياضية', short: 'المناهج وطرق التدريس',       head: 'أ.د/ أشرف أبو الوفا عبد الرحيم', clerk: '' },
-  { id: 'train', name: 'التدريب الرياضي وعلوم الحركة',        short: 'التدريب الرياضي',            head: '', clerk: '' },
-  { id: 'health',name: 'علوم الصحة الرياضية',                 short: 'علوم الصحة الرياضية',        head: '', clerk: '' },
+  { id: 'curr',  name: 'المناهج وطرق تدريس التربية الرياضية', short: 'المناهج وطرق التدريس',       head: 'أ.د/ أشرف أبو الوفا عبد الرحيم', clerk: 'أ/ محمد حماده عبد اللاه' },
+  { id: 'train', name: 'التدريب الرياضي وعلوم الحركة',        short: 'التدريب الرياضي',            head: '', clerk: 'د/ إسراء ناصر ثابت' },
+  { id: 'health',name: 'علوم الصحة الرياضية',                 short: 'علوم الصحة الرياضية',        head: '', clerk: 'أ/ محمد حسن على' },
   { id: 'psych', name: 'العلوم التربوية والنفسية الرياضية',   short: 'العلوم التربوية والنفسية',   head: '', clerk: '' }
 ];
 
@@ -551,7 +551,7 @@ function formCtx(d) {
   const sups = (d.sups || []).filter(s => s.name && s.name.trim());
   const supName = s => esc(((s.rank || '') + ' ' + s.name.trim()).trim());
   const head = d.head && d.head.trim() ? esc(d.head.trim()) : 'أ.د/ ..............................';
-  const clerk = d.clerk && d.clerk.trim() ? esc(d.clerk.trim()) : 'أ/ ......................';
+  const clerk = dept.clerk ? esc(dept.clerk) : 'أ/ ......................';
   return { f, g, dept, Y, deg, statusLabel, muqayyad, v, dt, sups, supName, head, clerk };
 }
 
@@ -1523,7 +1523,7 @@ function deptDefaults(prev) {
   const d = deptOf(), f = $('#frm').elements;
   const fieldOf = x => `علوم الرياضة – ${x.short}`, placeOf = x => `قسم ${x.name} – كلية علوم الرياضة – جامعة سوهاج`;
   if (!f.head.value || (prev && f.head.value === prev.head)) f.head.value = d.head;
-  if (!f.clerk.value || (prev && f.clerk.value === prev.clerk)) f.clerk.value = d.clerk;
+  f.clerk.value = d.clerk;
   if (!f.field.value || (prev && f.field.value === fieldOf(prev))) f.field.value = fieldOf(d);
   if (!f.place.value || (prev && f.place.value === placeOf(prev))) f.place.value = placeOf(d);
   $$('#sups .sup').forEach(s => { const j = $('[data-k=job]', s); if (j.dataset.auto) j.value = autoJob($('[data-k=rank]', s).value); });
